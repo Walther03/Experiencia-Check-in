@@ -3,6 +3,8 @@ package com.checkIn.stepdefinitions;
 import com.checkIn.pageObjects.pages.DashboardPage;
 import com.checkIn.runners.RunPostmanCollection;
 import io.cucumber.java.After;
+import io.cucumber.java.AfterStep;
+import io.cucumber.java.Scenario;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -10,6 +12,8 @@ import io.cucumber.java.Before;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.json.JSONObject;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -42,7 +46,26 @@ public class HomeSteps {
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
     }
+    // Captura de screenshot en cada paso
+    @AfterStep
+    public void takeScreenshotAfterStep(Scenario scenario) {
+        if (driver != null) {
+            byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+            scenario.attach(screenshot, "image/png", "Paso: " + scenario.getName());
+        }
+    }
 
+    // Cierra navegador y guarda evidencia si falla
+    @After
+    public void tearDown(Scenario scenario) {
+        if (driver != null) {
+            if (scenario.isFailed()) {
+                byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+                scenario.attach(screenshot, "image/png", "Error en: " + scenario.getName());
+            }
+            driver.quit();
+        }
+    }
     @And("ejecuto la colección de Postman y obtengo la reserva")
     public void ejecutoPostmanYCapturoVariables() throws Exception {
 

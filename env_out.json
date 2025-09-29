@@ -1,0 +1,854 @@
+{
+  "_": {
+    "postman_variable_scope": "environment",
+    "postman_exported_at": "2025-09-26T17:43:59.969Z",
+    "postman_exported_using": "Postman/11.64.6"
+  },
+  "id": "80afd5e9-3642-4397-a6df-94faf2ed9cc6",
+  "name": "QA",
+  "values": [
+    {
+      "type": "any",
+      "value": "1c8b13de4f3443b48e4d9d942ffa5a0d",
+      "key": "subscription_key"
+    },
+    {
+      "type": "any",
+      "value": "1c8b13de4f3443b48e4d9d942ffa5a0d",
+      "key": "Subscription-key-route-ms"
+    },
+    {
+      "type": "any",
+      "value": "557b10a3ec68454a8d5c060207ba93ac",
+      "key": "Ocp-Apim-Subscription-Key-backoffice"
+    },
+    {
+      "type": "any",
+      "value": "https://dev-api.skyairline.com/shopping-fares/airport-route/v1",
+      "key": "url_base_route_ms"
+    },
+    {
+      "type": "any",
+      "value": "https://auth-api-qa.skyairline.com",
+      "key": "auth_api_base_url"
+    },
+    {
+      "type": "any",
+      "value": "BE34AE1072E04C76B905A08A8C71CDDE",
+      "key": "auth_api_token"
+    },
+    {
+      "type": "any",
+      "value": "4D12749C7F314113BD378C307F4619E8",
+      "key": "auth_api_xapikey"
+    },
+    {
+      "type": "any",
+      "value": "180E0DB94BED469BADCEE8A6A51A6781",
+      "key": "sky_boarding_xapikey"
+    },
+    {
+      "type": "any",
+      "value": "e0edf28b-5e02-47e4-8a53-801c50f01d61",
+      "key": "sky_boarding_id"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "user_id"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "sky_boarding_role_id"
+    },
+    {
+      "type": "any",
+      "value": "E6E908ED0A5740088BED5914035D98AC",
+      "key": "timeline_xapikey"
+    },
+    {
+      "type": "any",
+      "value": "15b0e07b-f95a-4af6-ac01-771e0cb51fff\n",
+      "key": "timeline_id"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "timeline_role_id"
+    },
+    {
+      "type": "any",
+      "value": "07BB3FE225304CE497DBC07FD45D3BA6",
+      "key": "skyops_app_xapikey"
+    },
+    {
+      "type": "any",
+      "value": "1143890BB8C346C78D560270BEA7576C",
+      "key": "skyops_portal_xapikey"
+    },
+    {
+      "type": "any",
+      "value": "23800ed2-a6c2-4db4-9188-eecdfe73dd27\n",
+      "key": "skyops_app_id"
+    },
+    {
+      "type": "any",
+      "value": "96abc532-5d30-4422-8914-1e3ad35c5404",
+      "key": "skyops_portal_id"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "skyops_role_id"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "sky_boarding_bearer_token"
+    },
+    {
+      "type": "any",
+      "value": "https://boarding-flight-legs-qa.skyairline.com",
+      "key": "boarding_flight_legs"
+    },
+    {
+      "type": "any",
+      "value": "82DEE77659EF4907884971700A12F56E",
+      "key": "boarding_bl_xapikey"
+    },
+    {
+      "type": "any",
+      "value": "A4BF0BD0377945529A6234FDA0F34883",
+      "key": "boarding_token_bl"
+    },
+    {
+      "type": "any",
+      "value": "41EB1F76286D4BE09115B266260572A3",
+      "key": "boarding_token_pdc_bl"
+    },
+    {
+      "type": "any",
+      "value": "https://boarding-flight-manifests-qa.skyairline.com",
+      "key": "boarding_flight_manifests"
+    },
+    {
+      "type": "any",
+      "value": "82DEE77659EF4907884971700A12F56E",
+      "key": "boarding_xapikey_manifest"
+    },
+    {
+      "type": "any",
+      "value": "22A9D259FC68495881822AC00BF8A641",
+      "key": "boarding_token_bl_manifest"
+    },
+    {
+      "type": "any",
+      "value": "180E0DB94BED469BADCEE8A6A51A6781",
+      "key": "boarding_app_xapi_key"
+    },
+    {
+      "type": "any",
+      "value": "https://timeline-bl-qa.skyairline.com",
+      "key": "timeline_bl"
+    },
+    {
+      "type": "any",
+      "value": "7FC7648C52BE480E8D69E1D854F436FB",
+      "key": "timeline_bl_xapikey"
+    },
+    {
+      "type": "any",
+      "value": "7F6E772704D64420823673FC8272A9A2",
+      "key": "timeline_bl_token"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "timeline_bearer_token"
+    },
+    {
+      "type": "any",
+      "value": "E6E908ED0A5740088BED5914035D98AC",
+      "key": "timeline_web_xapikey"
+    },
+    {
+      "type": "any",
+      "value": "https://skycontrolhitos-backend-qa.skyairline.com",
+      "key": "skycontrolhitos"
+    },
+    {
+      "type": "any",
+      "value": "1276D4A867F6449F840388D9CBF0F312",
+      "key": "skycontrolhitos_backend_xapikey"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "skycontrolhitos_bearer_token"
+    },
+    {
+      "type": "any",
+      "value": "694e6aa2-4e2f-480e-af2a-bdee328ea023",
+      "key": "skycontrolhitos_id"
+    },
+    {
+      "type": "any",
+      "value": "fcb588b8-d122-445b-9019-6a1982c5bee6",
+      "key": "skycontrolhitos_role_id"
+    },
+    {
+      "type": "any",
+      "value": "https://boarding-app-backoffice-backend-qa.skyairline.com",
+      "key": "skyboarding_backoffice"
+    },
+    {
+      "type": "any",
+      "value": "8299C22F2845400C9F99E11B322A0416",
+      "key": "skyboarding_backoffice_xapikey"
+    },
+    {
+      "type": "any",
+      "value": "B731F2C318F24772AC84251425AB73CE",
+      "key": "sky_in_xapikey"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "sky_in_bearer_token"
+    },
+    {
+      "type": "any",
+      "value": "https://ink-api-integration-ms-qa.skyairline.com",
+      "key": "ink_api_integration_ms"
+    },
+    {
+      "type": "any",
+      "value": "90AEEB54DAC6469C8989008E6E069CEE",
+      "key": "ink_api_integration_ms_xapikey"
+    },
+    {
+      "type": "any",
+      "value": "665E4F811E8949078DD9D918D37C3DA9",
+      "key": "ink_api_integration_ms_token"
+    },
+    {
+      "type": "any",
+      "value": "https://api-staging.inkcloud.io/api/1.8",
+      "key": "ink_uri"
+    },
+    {
+      "type": "any",
+      "value": "https://api-staging.radixxgo.com/api/1.8",
+      "key": "raddix_uri"
+    },
+    {
+      "type": "any",
+      "value": "KuhYwntNVh72ek6DicGPsYB4r1qVxOS1fBRBv6z4",
+      "key": "ink_xapikey"
+    },
+    {
+      "type": "any",
+      "value": "skyinkapi",
+      "key": "ink_username"
+    },
+    {
+      "type": "any",
+      "value": "W9mggQzLkRcfl4en",
+      "key": "ink_password"
+    },
+    {
+      "type": "any",
+      "value": "https://boarding-pdc-ldm-qa.skyairline.com",
+      "key": "boarding_pdc_ldm"
+    },
+    {
+      "type": "any",
+      "value": "82DEE77659EF4907884971700A12F56E",
+      "key": "boarding_pdc_ldm_xapikey"
+    },
+    {
+      "type": "any",
+      "value": "A4BF0BD0377945529A6234FDA0F34883",
+      "key": "boarding_pdc_ldm_token"
+    },
+    {
+      "type": "any",
+      "value": "http://137.117.66.142",
+      "key": "flight_ops"
+    },
+    {
+      "type": "any",
+      "value": "https://flights-ms-qa.skyairline.com",
+      "key": "flight_ms"
+    },
+    {
+      "type": "any",
+      "value": "AACFDC4EBF4D438099F20226524EC03E",
+      "key": "flight_ms_xapikey"
+    },
+    {
+      "type": "any",
+      "value": "6512B0CC67FE4CE58490A2C33F83DB12",
+      "key": "flight_ms_token"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "sky_ops_bearer_token"
+    },
+    {
+      "type": "any",
+      "value": "T1RLAQIMcgy6xs9MJu9zj1dD8n1p7p5ZrC3mlYb5ATiImmCKChD//svcVuM//w0hSPFMSzKHAADQ72L4Rnu9/KE+GSASpZXxnOCMhHrT/PISDg+5D7oq1eP4SgLFKVJQScWqgGMix1a/XSzIm7F5fQnJ4qFzJ9vZPDZWhJ+iHWDj9a4w1B831e0mYO9YhUXg/nAibEJOh1/5YQf8mtQGwqljJHRy9PYpp8K87tqZyFB6Bgj8+iMUvRljI36gGGxVROfGGA1I51v1WRZxg4wjd+COqeAz5WUjpZvkkY9as+fgJfVqagRaDNACeLneyRQ/dMvEqi1KwLHZ8DQaCgpM5e4Xd6nwqREiIg**",
+      "key": "token"
+    },
+    {
+      "type": "any",
+      "value": "https://api-crt.cert.havail.sabre.com",
+      "key": "endpoint"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "session"
+    },
+    {
+      "type": "any",
+      "value": "https://kiosk-reservation-services-qa.skyairline.com",
+      "key": "kiosk_reservation_service"
+    },
+    {
+      "type": "any",
+      "value": "16C6912F424E493E922D28F2340BAC6E",
+      "key": "kiosk_reservation_service_xapikey"
+    },
+    {
+      "type": "any",
+      "value": "4DD30B97163D440985E3FE0598D5FF65",
+      "key": "kiosk_reservation_service_token"
+    },
+    {
+      "type": "any",
+      "value": "https://kiosk-sabre-integration-service-qa.skyairline.com",
+      "key": "kiosk_sabre_integration_url"
+    },
+    {
+      "type": "any",
+      "value": "C8B7FA7169264F859B6BC9133CF99235",
+      "key": "kiosk_sabre_integration_xapikey"
+    },
+    {
+      "type": "any",
+      "value": "37F06A7DDA804876B5F990161A1A0D5E",
+      "key": "kiosk_sabre_integration_token"
+    },
+    {
+      "type": "any",
+      "value": "https://kiosk-baggage-services-qa.skyairline.com",
+      "key": "kiosk_baggage_service_url"
+    },
+    {
+      "type": "any",
+      "value": "1631FDF03F2140D79A1E3D13E70EEEF0",
+      "key": "kiosk_baggage_service_xapikey"
+    },
+    {
+      "type": "any",
+      "value": "298A0284568247A890D362728C637F23",
+      "key": "kiosk_baggage_service_token"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "SESSION_ID"
+    },
+    {
+      "type": "any",
+      "value": "v4",
+      "key": "version"
+    },
+    {
+      "type": "any",
+      "value": "https://datafeed-information-publisher-qa.skyairline.com",
+      "key": "datafeed_information_publisher"
+    },
+    {
+      "type": "any",
+      "value": "https://ops-crud-flight-il-qa.skyairline.com/graphql",
+      "key": "ops-crud-flight-il_url"
+    },
+    {
+      "type": "any",
+      "value": "https://ops-crud-aircraft-il-qa.skyairline.com",
+      "key": "ops-crud-aircraft-il_url"
+    },
+    {
+      "type": "any",
+      "value": "https://ops-crud-aircrafttype-il-qa.skyairline.com",
+      "key": "ops-crud-aircrafttype-il_url"
+    },
+    {
+      "type": "any",
+      "value": "https://ops-crud-config-il-qa.skyairline.com",
+      "key": "ops-crud-config-il_url"
+    },
+    {
+      "type": "any",
+      "value": "https://ops-crud-crew-il-qa.skyairline.com",
+      "key": "ops-crud-crew-il_url"
+    },
+    {
+      "type": "any",
+      "value": "https://ops-crud-fuelseat-il-qa.skyairline.com",
+      "key": "ops-crud-fuelseat-il_url"
+    },
+    {
+      "type": "any",
+      "value": "https://ops-crud-logs-il-qa.skyairline.com",
+      "key": "ops-crud-logs-il_url"
+    },
+    {
+      "type": "any",
+      "value": "https://ops-crud-manager-il-qa.skyairline.com",
+      "key": "ops-crud-manager-il_url"
+    },
+    {
+      "type": "any",
+      "value": "https://ops-crud-station-il-qa.skyairline.com",
+      "key": "ops-crud-station-il_url"
+    },
+    {
+      "type": "any",
+      "value": "https://ops-crud-cargo-il-qa.skyairline.com",
+      "key": "ops-crud-cargo-il_url"
+    },
+    {
+      "type": "any",
+      "value": "https://boarding-event-publisher-ms-qa.skyairline.com",
+      "key": "boarding-event-publisher-ms"
+    },
+    {
+      "type": "any",
+      "value": "1EBEE057489A4BF5943F0B266DC43F42",
+      "key": "boarding-event-publisher-ms_token"
+    },
+    {
+      "type": "any",
+      "value": "90AEEB54DAC6469C8989008E6E069CEE",
+      "key": "boarding-event-publisher-ms_xapikey"
+    },
+    {
+      "type": "any",
+      "value": "https://contingencias-gateway-qa.skyairline.com",
+      "key": "contingencias-gateway"
+    },
+    {
+      "type": "any",
+      "value": "C732204085DB4D2C866110D65D724ECF",
+      "key": "contingencias-gateway_token"
+    },
+    {
+      "type": "any",
+      "value": "1CE77BFA32FB4BAE9AEC53159240734E",
+      "key": "contingencias-gateway_xapikey"
+    },
+    {
+      "type": "any",
+      "value": "https://ops-cargo-manifest-ms-qa.skyairline.com",
+      "key": "ops-cargo-manifest-ms"
+    },
+    {
+      "type": "any",
+      "value": "https://ops-cargo-ms-qa.skyairline.com",
+      "key": "ops-cargo-ms"
+    },
+    {
+      "type": "any",
+      "value": "https://ops-fob-ms-qa.skyairline.com",
+      "key": "ops-fob-ms"
+    },
+    {
+      "type": "any",
+      "value": "https://ops-logs-ms-qa.skyairline.com",
+      "key": "ops-logs-ms"
+    },
+    {
+      "type": "any",
+      "value": "https://ops-notifications-ms-qa.skyairline.com",
+      "key": "ops-notifications-ms"
+    },
+    {
+      "type": "any",
+      "value": "https://skyops-ops-listener-qa.skyairline.com",
+      "key": "skyops-ops-listener"
+    },
+    {
+      "type": "any",
+      "value": "https://skyops-bff-qa.skyairline.com",
+      "key": "skyops-bff"
+    },
+    {
+      "type": "any",
+      "value": "1143890BB8C346C78D560270BEA7576C",
+      "key": "skyops-bff_xapikey"
+    },
+    {
+      "type": "any",
+      "value": "F77257E19659416A96DA78B8C238A25F",
+      "key": "skyops-bff_token"
+    },
+    {
+      "type": "any",
+      "value": "https://ops-masterdata-bl-qa.skyairline.com",
+      "key": "ops-masterdata-bl"
+    },
+    {
+      "type": "any",
+      "value": "1143890BB8C346C78D560270BEA7576C",
+      "key": "ops-masterdata-bl_xapikey"
+    },
+    {
+      "type": "any",
+      "value": "F77257E19659416A96DA78B8C238A25F",
+      "key": "ops-masterdata-bl_token"
+    },
+    {
+      "type": "any",
+      "value": "https://operational-flight-information-qa.skyairline.com",
+      "key": "operational-flight-information"
+    },
+    {
+      "type": "any",
+      "value": "D128697FC1C3453E937E2342CAA45E27",
+      "key": "operational-flight-information-xapikey"
+    },
+    {
+      "type": "any",
+      "value": "5A2CF41AF7054710960B0B667D66A711",
+      "key": "operational-flight-information-token"
+    },
+    {
+      "type": "any",
+      "value": "https://operational-flight-information-publisher-qa.skyairline.com",
+      "key": "operational-flight-information-publisher"
+    },
+    {
+      "type": "any",
+      "value": "80FA3D0EE7E84CB2ADF346DD772C8EF2",
+      "key": "operational-flight-information-publisher-xapikey"
+    },
+    {
+      "type": "any",
+      "value": "237B826D365E480E9A80391F18BE7050",
+      "key": "operational-flight-information-publisher-token"
+    },
+    {
+      "type": "any",
+      "value": "https://flight-manifest-information-qa.skyairline.com",
+      "key": "flight-manifest-information"
+    },
+    {
+      "type": "any",
+      "value": "7F57B8DD37CE4D7D89E52B9A1268D36E",
+      "key": "flight-manifest-information-xapikey"
+    },
+    {
+      "type": "any",
+      "value": "07AC1965D68C47CEB209EA6CE99C4710",
+      "key": "flight-manifest-information-token"
+    },
+    {
+      "type": "any",
+      "value": "https://flight-manifest-information-publisher-qa.skyairline.com",
+      "key": "flight-manifest-information-publisher"
+    },
+    {
+      "type": "any",
+      "value": "EFEE2C424BEC479489172FBF97876C5C",
+      "key": "flight-manifest-information-publisher-xapikey"
+    },
+    {
+      "type": "any",
+      "value": "F01DE6171DE542C0820384A8A11D5448",
+      "key": "flight-manifest-information-publisher-token"
+    },
+    {
+      "type": "any",
+      "value": "https://motion-informer-bl-qa.skyairline.com",
+      "key": "manifest-informer-bl-uri"
+    },
+    {
+      "type": "any",
+      "value": "https://boarding-sabre-integration-service-qa.skyairline.com",
+      "key": "boarding-sabre-integration"
+    },
+    {
+      "type": "any",
+      "value": "080FE5AF43424084AE367E00C7C57643",
+      "key": "boarding-sabre-integration-xapikey"
+    },
+    {
+      "type": "any",
+      "value": "47D74AFA21B1470EBA67C3159505DBF9",
+      "key": "boarding-sabre-integration-token"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "sky_ops_portal_bearer_token"
+    },
+    {
+      "type": "any",
+      "value": "0F268074DFA14DDDBC6DE7911A417469",
+      "key": "datafeed_sabre_integration_token_api_key"
+    },
+    {
+      "type": "any",
+      "value": "B8B7C80223AA45AE9726921CDD4E1D3D",
+      "key": "datafeed_sabre_integration_token_auth"
+    },
+    {
+      "type": "any",
+      "value": "https://api-crt.as.cert.havail.sabre.com",
+      "key": "endpoint_dcci"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "searchType"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "origin"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "destination"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "departurDate"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "flightNumber"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "quantityADT"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "quantityCHD"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "quantityINF"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "quantityUNN"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "documentInfo"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "correo"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "marketingText"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "bundle"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "HM"
+    },
+    {
+      "type": "any",
+      "value": "[{\"@id\":\"1\",\"passengerIndex\":1,\"passengerNameNumber\":\"1\",\"passengerDetails\":{\"firstName\":\"Mireille\",\"lastName\":\"Larson\",\"prefix\":\"\",\"middleName\":\"\",\"maidenName\":\"\",\"suffix\":\"\"},\"passengerInfo\":{\"dateOfBirth\":\"1990-12-12\",\"gender\":\"FEMALE\",\"redressNumber\":null,\"knownTravelerNumber\":null,\"generalSalesTaxData\":null,\"type\":\"ADT\",\"emails\":[\"user_tekton14@skyairline.com\"],\"phones\":[{\"type\":\"HOME\",\"countryCode\":\"\",\"areaCode\":\"56\",\"number\":\"987788079\",\"extension\":\"\"}],\"address\":{\"street1\":\"123 Dallas St\",\"street2\":\"Apt 123\",\"postcode\":\"12345\",\"state\":\"Texas\",\"city\":\"Southlake\",\"country\":\"\",\"addressType\":\"OTHER\"}},\"preferences\":{\"specialPreferences\":{\"mealPreference\":null,\"seatPreference\":null,\"specialRequests\":[]},\"frequentFlyer\":null},\"documentInfo\":null,\"visaInfo\":null},{\"@id\":\"2\",\"passengerIndex\":2,\"passengerNameNumber\":\"2\",\"passengerDetails\":{\"firstName\":\"Reuben\",\"lastName\":\"Harber\",\"prefix\":\"\",\"middleName\":\"\",\"maidenName\":\"\",\"suffix\":\"\"},\"passengerInfo\":{\"dateOfBirth\":\"1990-12-12\",\"gender\":\"FEMALE\",\"redressNumber\":null,\"knownTravelerNumber\":null,\"generalSalesTaxData\":null,\"type\":\"ADT\",\"emails\":[\"user_tekton14@skyairline.com\"],\"phones\":[{\"type\":\"HOME\",\"countryCode\":\"\",\"areaCode\":\"56\",\"number\":\"987788079\",\"extension\":\"\"}],\"address\":{\"street1\":\"123 Dallas St\",\"street2\":\"Apt 123\",\"postcode\":\"12345\",\"state\":\"Texas\",\"city\":\"Southlake\",\"country\":\"\",\"addressType\":\"OTHER\"}},\"preferences\":{\"specialPreferences\":{\"mealPreference\":null,\"seatPreference\":null,\"specialRequests\":[]},\"frequentFlyer\":null},\"documentInfo\":null,\"visaInfo\":null}]",
+      "key": "passengers"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "datacheck"
+    },
+    {
+      "type": "any",
+      "value": "40b58f41-096d-4da1-b274-87d26f6a2302",
+      "key": "EXECUTION_ID"
+    },
+    {
+      "type": "any",
+      "value": "-571606769",
+      "key": "basket1"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "departureDateTime"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "kiosk-shopping-add-services"
+    },
+    {
+      "type": "any",
+      "value": "2A7B8BB5BFB24A08B80CF968B683C7F5",
+      "key": "kiosk-shopping-add-service-key"
+    },
+    {
+      "type": "any",
+      "value": "51527F8574524549AEAC517F3FB2330E",
+      "key": "kiosk-shopping-add-service-authorization"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "originIda"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "destinationIda"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "originRegreso"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "destinationRegreso"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "departurDateIda"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "departurDateRegreso"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "flightNumber1"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "flightNumber2"
+    },
+    {
+      "type": "any",
+      "value": "https://kiosk-shopping-add-services-qa.skyairline.com/",
+      "key": "kiosk-shopping-add-services"
+    },
+    {
+      "type": "any",
+      "value": "https://api.int.platform.sabre.com",
+      "key": "tsts-base-url"
+    },
+    {
+      "type": "any",
+      "value": "https://cki-sabre-integration-services-qa.skyairline.com",
+      "key": "cki_sabre_integration-services"
+    },
+    {
+      "type": "any",
+      "value": "https://kiosk-groups-qa.skyairline.com",
+      "key": "kiosk_groups"
+    },
+    {
+      "type": "any",
+      "value": "https://kiosk-orchestrator-qa.skyairline.com",
+      "key": "kiosk-orchestrator"
+    },
+    {
+      "type": "any",
+      "value": "7C1A2AF0FED24161AF9E023134307FAE",
+      "key": "kiosk-orchestrator-x-api-key"
+    },
+    {
+      "type": "any",
+      "value": "16C1502691FD4F4295D1DDBF8905D5AF",
+      "key": "kiosk-orchestrator-authorization"
+    },
+    {
+      "type": "any",
+      "value": "https://kiosk-inhibitions-qa.skyairline.com",
+      "key": "kiosk-inhibitions"
+    },
+    {
+      "type": "any",
+      "value": "CLP",
+      "key": "currency"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "seatsCode"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "asientos"
+    },
+    {
+      "type": "any",
+      "value": "83376",
+      "key": "amountTotal"
+    },
+    {
+      "type": "any",
+      "value": "Larson",
+      "key": "reloc"
+    },
+    {
+      "type": "any",
+      "value": "https://datafeed-sabre-integration-service-qa.skyairline.com",
+      "key": "datafeed_sabre_integration_url"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "basket2"
+    },
+    {
+      "type": "any",
+      "value": "",
+      "key": "execution"
+    },
+    {
+      "type": "any",
+      "value": "https://dev-api.skyairline.com",
+      "key": "check-in-orchestrator-uri"
+    }
+  ],
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2025-09-26T18:45:38.502Z",
+  "_postman_exported_using": "Newman/6.2.1"
+}

@@ -1,0 +1,1718 @@
+{
+	"info": {
+		"_postman_id": "73fc7f5d-81b0-492e-9e63-5bbad040f6b6",
+		"name": "Reservas Automaticas - Wal",
+		"description": "# Colección de creación de PNRs Rápida\n\nEl objetivo de la colección es crear un mecanísmo cómodo y rápido para la creación de PNRs de prueba. Toda configuración en esta colección se hace desde la prestaña Pre-Request Script del endpoint \"Authorization\" (El primero de la colección)\n\n## Indicaciones de uso\n\n- Dirígete al Enpoint Authorization dentro de la carpeta H2 SHop & Book.\n- Abre Post Authorization.\n- Busca la pestaña Pre-Request Script.\n- Modifica las líneas según la configuración deseada. La documentación se encuentra en la siguinte sección.\n- GUARDA LOS CAMBIOS, si no lo haces las configuraciones ingresadas no se aplicarán.\n- Ejecuta las llamadas desde el Runner de la colección:\n    \n\n<img src=\"https://content.pstmn.io/6c1a9e99-1efc-40d2-8523-feb137d8a51a/Q2FwdHVyYS5QTkc=\">\n\n### Confiugraciones\n\n#### Configuración de Origen y destino\n\n- Origin = \"SCL\"\n- Destination = \"ARI\"\n    \n\n#### Configuración de Origen y destino\n\nDepartureReturnDate es campo opcional, solo para los vuelos RT\n\n- DepartureOriginDate = \"2024-05-22\"\n- DepartureReturnDate = \"2024-05-27\"\n    \n\n#### Configuración de Tipo de vuelo\n\n- TripType = \"RT\" // Valores posibles: OW | RT\n    \n\n#### Configuración de pasajeros\n\nSolo se debe configurar la cantidad de pasajeros por tipo. En base a esto la colección creará los datos necesarios para ejecutar (Nombre, Fecha de nacimiento, tipo de pasajero)\n\n- PaxADT = 2\n- PaxCHD = 0\n- PaxINF = 0\n- PaxUNN = 0 // No compatible con vuelos RT\n    \n\nCuidado con no configurar algo no válido, como vuelos de INF > 0 & ADT = 0\n\n#### Configuración de tarifa\n\nSelección de tarifa con la que quieres emitir los PNRs (0 = Zero | 1 = Plus | 2 = Full)\n\nFareSelection = 0\n\n## Resultados en Consola\n\nAl correr varias iteraciones en el Runner, la consola entregará de vuelta un log con los PNRs creados en los siguientes formatos:\n\n- Si todo sale bien y luego de emitir el PNR se logra crear la Orden para habilitarla en MMB:\n    - \\[PNR\\] - \\[LastName\\]\n- Si hay un error en la ejecución del find-by-pnr y por lo tanto solo queda la orden creada en Sabre, pero no habilitada para MMB:\n    - \\[PNR\\] - \\[LastName\\]: Orden no emitida\n- SI hay cualquier error en la ejecución de los endpoints antes de emitir el PNR en Sabre, la consola arrojará un error y dejará de correr la colección. En este caso revisar que no estemos configurando una solicitud incompatible con Sabre, como más Infantes que Adultos\n    \n\n## Próximos incrementos\n\n- Agregar asientos\n- Agregar ancillaries\n    - Incoporar automáticamente 0BH para UNN\n- Cambiar Stateless\n    \n- Creación secuencial de PNRs para todos los bundles\n    \n- Creación secuencial de PNRs para todos los tipos de ruta (OW y RT)\n    \n- Creación secuencial de PNRs para todos los bundles y tipos de ruta",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21286620",
+		"_collection_link": "https://sky-developers.postman.co/workspace/Sky-Operaciones~d36c5541-3d5d-48ff-a35a-4fe57faf4ddd/collection/21286620-73fc7f5d-81b0-492e-9e63-5bbad040f6b6?action=share&source=collection_link&creator=21286620"
+	},
+	"item": [
+		{
+			"name": "H2 Shop & Book_FA",
+			"item": [
+				{
+					"name": "Authorization",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const oac = \"CL\"\r",
+									"const Origin = \"SCL\"\r",
+									"const Destination = \"ANF\"\r",
+									"const DepartureOriginDate = \"2025-09-26\"\r",
+									"const DepartureReturnDate = \"\" // Solo para RT\r",
+									"const TripType = \"OW\" // Valores posibles: OW | RT\r",
+									"const conAsientos = false // true o false \r",
+									"\r",
+									"// Configuración de pasajeros\r",
+									"var PaxADT = 2\r",
+									"var PaxCHD = 0\r",
+									"var PaxINF = 0\r",
+									"var PaxUNN = 0 // No compatible con vuelos RT\r",
+									"\r",
+									"// Configuración de tarifa\r",
+									"var FareSelection = 0// 0 = Zero | 1 = Light | 2 = Flex | 3 = Max Flex\r",
+									"var FareSelection2 = 0// 0 = Zero | 1 = Light | 2 = Flex | 3 = Max Flex\r",
+									"// FareSelection = Math.floor(Math.random() * 2) //Descomentar para aleatorizar la selección de bundle\r",
+									"\r",
+									"// ------------------\r",
+									"// No configurar nada de aqui en adelante\r",
+									"// ------------------\r",
+									"\r",
+									"const TotalPax = PaxADT + PaxCHD + PaxINF + PaxUNN\r",
+									"const Fares = [0,1,2,4]\r",
+									"const OriginBundle = Fares[FareSelection] \r",
+									"const ReturnBundle = Fares[FareSelection2] \r",
+									"// Seteo de variables de collección\r",
+									"//pm.collectionVariables.set(\"Origin\", Origin);\r",
+									"pm.variables.set(\"conAsientos\", conAsientos);\r",
+									"pm.collectionVariables.set(\"Origin\", Origin);\r",
+									"pm.collectionVariables.set(\"Destination\", Destination);\r",
+									"pm.collectionVariables.set(\"DepartureOriginDate\", DepartureOriginDate);\r",
+									"pm.collectionVariables.set(\"DepartureReturnDate\", DepartureReturnDate);\r",
+									"pm.collectionVariables.set(\"PaxADT\", PaxADT);\r",
+									"pm.collectionVariables.set(\"PaxCHD\", PaxCHD);\r",
+									"pm.collectionVariables.set(\"PaxINF\", PaxINF);\r",
+									"pm.collectionVariables.set(\"PaxUNN\", PaxUNN);\r",
+									"pm.collectionVariables.set(\"OriginBundle\", OriginBundle);\r",
+									"pm.collectionVariables.set(\"ReturnBundle\", ReturnBundle);\r",
+									"pm.collectionVariables.set(\"TripType\", TripType);\r",
+									"pm.collectionVariables.set(\"TotalPax\", TotalPax);\r",
+									"pm.collectionVariables.set(\"oac\", oac);\r",
+									"\r",
+									"\r",
+									"\r",
+									"let pax = []; //Arreglo para guardar tipos de pasajeros\r",
+									"let passengers = []; //Arreglo para guardar objeto pasajero\r",
+									"let passengerId = 1;\r",
+									"let Gender = \"\"\r",
+									"let fecNac = \"\";\r",
+									"\r",
+									"//Llenado del array pax[]\r",
+									"for(let i = 1; i <= TotalPax; i++){\r",
+									"\r",
+									"    if(PaxADT > 0){\r",
+									"        pax.push(\"ADT\")\r",
+									"        PaxADT--\r",
+									"    }else if (PaxCHD > 0){\r",
+									"        pax.push(\"CHD\")\r",
+									"        PaxCHD--\r",
+									"    }else if(PaxINF > 0) {\r",
+									"        pax.push(\"INF\")\r",
+									"        PaxINF--\r",
+									"    }else{\r",
+									"        pax.push(\"UNN\")\r",
+									"        PaxUNN--\r",
+									"}\r",
+									"\r",
+									"}\r",
+									"\r",
+									"pax.forEach((tipoPax) => {\r",
+									"\r",
+									"     // Gender definition\r",
+									"    if (Math.round(Math.random()) == 0) { \r",
+									"        Gender =  \"MALE\"\r",
+									"    }\r",
+									"    else {\r",
+									"        Gender =  \"FEMALE\"\r",
+									"    }\r",
+									"\r",
+									"    switch(tipoPax){\r",
+									"        case \"ADT\":\r",
+									"        fecNac = \"1990-12-12\"\r",
+									"        break;\r",
+									"        case \"CHD\":\r",
+									"        case \"UNN\":\r",
+									"        fecNac = \"2018-12-12\"\r",
+									"        break;\r",
+									"        case \"INF\":\r",
+									"        fecNac = \"2025-01-01\"\r",
+									"        break\r",
+									"        default:\r",
+									"        fecNac = \"1990-12-12\"\r",
+									"    }\r",
+									"\r",
+									"        let passenger = {\r",
+									"            \"@id\": passengerId.toString(),\r",
+									"            \"passengerIndex\": passengerId,\r",
+									"            \"passengerNameNumber\": passengerId.toString(),\r",
+									"            \"passengerDetails\": {\r",
+									"                \"firstName\": pm.variables.replaceIn(\"{{$randomFirstName}}\"),\r",
+									"                \"lastName\": pm.variables.replaceIn(\"{{$randomLastName}}\"),\r",
+									"                \"prefix\": \"\",\r",
+									"                \"middleName\": \"\",\r",
+									"                \"maidenName\": \"\",\r",
+									"                \"suffix\": \"\"\r",
+									"            },\r",
+									"            \"passengerInfo\": {\r",
+									"                \"dateOfBirth\": fecNac,\r",
+									"                \"gender\": Gender,\r",
+									"                \"redressNumber\": null,\r",
+									"                \"knownTravelerNumber\": null,\r",
+									"                \"generalSalesTaxData\": null,\r",
+									"                \"type\": tipoPax,\r",
+									"                \"emails\": [\r",
+									"                    \"user_tekton14@skyairline.com\"\r",
+									"                ],\r",
+									"                \"phones\": [\r",
+									"                     {\r",
+									"                      \"type\": \"HOME\",\r",
+									"                       \"countryCode\": \"\",\r",
+									"                      \"areaCode\": \"56\",\r",
+									"                      \"number\": \"987788079\",\r",
+									"                      \"extension\": \"\"\r",
+									"                     }\r",
+									"                ],\r",
+									"                \"address\": {\r",
+									"                     \"street1\": \"123 Dallas St\",\r",
+									"                     \"street2\": \"Apt 123\",\r",
+									"                     \"postcode\": \"12345\",\r",
+									"                     \"state\": \"Texas\",\r",
+									"                     \"city\": \"Southlake\",\r",
+									"                     \"country\": \"\",\r",
+									"                    \"addressType\": \"OTHER\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"preferences\": {\r",
+									"                \"specialPreferences\": {\r",
+									"                    \"mealPreference\": null,\r",
+									"                    \"seatPreference\": null,\r",
+									"                    \"specialRequests\": []\r",
+									"                },\r",
+									"                \"frequentFlyer\": null\r",
+									"            },\r",
+									"            \"documentInfo\": null,\r",
+									"            \"visaInfo\": null\r",
+									"        };\r",
+									"\r",
+									"        passengers.push(passenger);\r",
+									"        passengerId++;      \r",
+									"    console.log(tipoPax);\r",
+									"    console.log(passengers);\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.environment.set(\"passengers\", JSON.stringify(passengers));\r",
+									"//Configuraciones de runner\r",
+									"let iterationCounter = 0 \r",
+									"if (TripType == \"RT\") { postman.setNextRequest(\"Search RT\") }"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonResponse = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"token\", jsonResponse.access_token);\r",
+									"postman.setEnvironmentVariable(\"endpoint\", \"https://api-crt.cert.havail.sabre.com\");\r",
+									"postman.setEnvironmentVariable(\"version\", \"v4\");"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic ZGpFNlNESkVRMFV5VTBkRE9tZ3lPbWd5OloxTlFNVXRVYlhVPQ==",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "grant_type=client_credentials"
+						},
+						"url": {
+							"raw": "https://api-crt.cert.havail.sabre.com/v2/auth/token",
+							"protocol": "https",
+							"host": [
+								"api-crt",
+								"cert",
+								"havail",
+								"sabre",
+								"com"
+							],
+							"path": [
+								"v2",
+								"auth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search OW",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"const OriginBundle = pm.variables.get(\"OriginBundle\");",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"console.log(jsonData);",
+									"console.log(OriginBundle);",
+									"",
+									"var EXECUTION_ID_RES = postman.getResponseHeader(\"execution\");",
+									"postman.setEnvironmentVariable(\"EXECUTION_ID\", EXECUTION_ID_RES);",
+									"postman.setEnvironmentVariable(\"basket1\", jsonData.unbundledOffers[0][OriginBundle].shoppingBasketHashCode);",
+									"",
+									"console.log(jsonData.unbundledOffers[0].shoppingBasketHashCode)",
+									"",
+									"postman.setEnvironmentVariable(\"currency\", jsonData.currency);",
+									"",
+									"",
+									"pm.test(\"Departure\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"departure\");",
+									"});",
+									"// ZO = 0",
+									"// LT = 1",
+									"// PL = 2",
+									"// FL = 3",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"",
+									"postman.setNextRequest(\"Select Flights OW\");",
+									"// Test to check if the response has content type header as application/json",
+									"pm.test(\"Response has content type header as application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Origen: \" + pm.collectionVariables.get(\"Origin\"), function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Destino: \" + pm.collectionVariables.get(\"Destination\"), function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"cabinClass\": \"Economy\",\n  \"currency\": null,\n  \"awardBooking\": false,\n  \"searchType\": \"BRANDED\",\n  \"promoCodes\": null,\n  \"pointOfSale\": \"{{oac}}\",\n  \"itineraryParts\": [\n    {\n      \"from\": {\n        \"code\": \"{{Origin}}\",\n        \"useNearbyLocations\": false\n      },\n      \"to\": {\n        \"code\": \"{{Destination}}\",\n        \"useNearbyLocations\": false\n      },\n      \"when\": {\n        \"date\": \"{{DepartureOriginDate}}\"\n      },\n      \"selectedOfferRef\": null,\n      \"plusMinusDays\": null\n    }\n  ],\n  \"passengers\": {\n    \"ADT\": {{PaxADT}},\n    \"CHD\": {{PaxCHD}},\n    \"INF\": {{PaxINF}},\n    \"UNN\": {{PaxUNN}}\n  },\n  \"trendIndicator\": null,\n  \"preferredOperatingCarrier\": null\n}"
+						},
+						"url": {
+							"raw": "{{endpoint}}/{{version}}/dc/products/air/search?jipcc=H2DC",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"{{version}}",
+								"dc",
+								"products",
+								"air",
+								"search"
+							],
+							"query": [
+								{
+									"key": "jipcc",
+									"value": "H2DC"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search RT",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const OriginBundle = pm.variables.get(\"OriginBundle\");",
+									"const ReturnBundle = pm.variables.get(\"ReturnBundle\");",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"basket1\", jsonData.unbundledOffers[0][OriginBundle].shoppingBasketHashCode);",
+									"postman.setEnvironmentVariable(\"basket2\", jsonData.unbundledOffers[1][ReturnBundle].shoppingBasketHashCode);",
+									"",
+									"var EXECUTION_ID_RES = postman.getResponseHeader(\"execution\");",
+									"postman.setEnvironmentVariable(\"EXECUTION_ID\", EXECUTION_ID_RES);",
+									"",
+									"postman.setNextRequest(\"Select Flights RT\");",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cabinClass\": \"Economy\",\n    \"currency\": null,\n    \"awardBooking\": false,\n    \"searchType\": \"BRANDED\",\n    \"promoCodes\": null,\n    \"pointOfSale\": \"{{oac}}\",\n    \"itineraryParts\": [\n        {\n            \"from\": {\n                \"code\": \"{{Origin}}\",\n                \"useNearbyLocations\": false\n            },\n            \"to\": {\n                \"code\": \"{{Destination}}\",\n                \"useNearbyLocations\": false\n            },\n            \"when\": {\n                \"date\": \"{{DepartureOriginDate}}\"\n            },\n            \"selectedOfferRef\": null,\n            \"plusMinusDays\": null\n        },\n        {\n            \"from\": {\n                \"code\": \"{{Destination}}\",\n                \"useNearbyLocations\": false\n            },\n            \"to\": {\n                \"code\": \"{{Origin}}\",\n                \"useNearbyLocations\": false\n            },\n            \"when\": {\n                \"date\": \"{{DepartureReturnDate}}\"\n            },\n            \"selectedOfferRef\": null,\n            \"plusMinusDays\": null\n        }\n    ],\n    \"passengers\": {\n        \"ADT\": {{PaxADT}},\n        \"CHD\": {{PaxCHD}},\n        \"INF\": {{PaxINF}}\n    },\n    \"trendIndicator\": null,\n    \"preferredOperatingCarrier\": null\n}"
+						},
+						"url": {
+							"raw": "{{endpoint}}/{{version}}/dc/products/air/search?jipcc=H2DC&execution={{EXECUTION_ID}}",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"{{version}}",
+								"dc",
+								"products",
+								"air",
+								"search"
+							],
+							"query": [
+								{
+									"key": "jipcc",
+									"value": "H2DC"
+								},
+								{
+									"key": "execution",
+									"value": "{{EXECUTION_ID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Select Flights OW",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const TotalPax = pm.collectionVariables.get(\"TotalPax\");\r",
+									"const TripType = pm.collectionVariables.get(\"TripType\");\r",
+									"\r",
+									"\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"// Para Debugg\r",
+									"console.info(\"jsonData\");\r",
+									"console.info(jsonData);\r",
+									"\r",
+									"// console.info(\"Check\");\r",
+									"// console.info(jsonData.itineraryParts[0].segments[0].departure);\r",
+									"\r",
+									"pm.collectionVariables.set(\"DepartureFlightSchedule\", jsonData.itineraryParts[0].segments[0].departure);\r",
+									"pm.collectionVariables.set(\"ArrivalFlightSchedule\", jsonData.itineraryParts[0].segments[0].arrival);\r",
+									"pm.collectionVariables.set(\"FlightNumber1\", jsonData.itineraryParts[0].segments[0].flight.flightNumber);\r",
+									"pm.collectionVariables.set(\"operatingFlightNumber1\", jsonData.itineraryParts[0].segments[0].flight.operatingFlightNumber);\r",
+									"pm.collectionVariables.set(\"airlineCode1\", jsonData.itineraryParts[0].segments[0].flight.airlineCode);\r",
+									"pm.collectionVariables.set(\"operatingAirlineCode1\", jsonData.itineraryParts[0].segments[0].flight.operatingAirlineCode);\r",
+									"\r",
+									"pm.collectionVariables.set(\"bookingClass\", jsonData.itineraryParts[0].segments[0].bookingClass);\r",
+									"pm.collectionVariables.set(\"fareBasis\", jsonData.itineraryParts[0].segments[0].fareBasis);\r",
+									"                                \r",
+									"\r",
+									"postman.setNextRequest(\"passenger\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{endpoint}}/{{version}}/dc/products/air?execution={{EXECUTION_ID}}&jipcc=H2DC&selectFlights={{basket1}}",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"{{version}}",
+								"dc",
+								"products",
+								"air"
+							],
+							"query": [
+								{
+									"key": "execution",
+									"value": "{{EXECUTION_ID}}"
+								},
+								{
+									"key": "jipcc",
+									"value": "H2DC"
+								},
+								{
+									"key": "selectFlights",
+									"value": "{{basket1}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Select Flights RT",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const TotalPax = pm.collectionVariables.get(\"TotalPax\");\r",
+									"const TripType = pm.collectionVariables.get(\"TripType\");\r",
+									"\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"// Para Debugg\r",
+									"//console.info(\"jsonData\");\r",
+									"//console.info(jsonData);\r",
+									"\r",
+									"// console.info(\"Check\");\r",
+									"// console.info(jsonData.itineraryParts[0].segments[0].departure);d\r",
+									"\r",
+									"pm.collectionVariables.set(\"DepartureFlightSchedule\", jsonData.itineraryParts[0].segments[0].departure);\r",
+									"pm.collectionVariables.set(\"ReturnFlightSchedule\", jsonData.itineraryParts[1].segments[0].departure);\r",
+									"\r",
+									"console.log(pm.collectionVariables.get(\"ReturnFlightSchedule\"));\r",
+									"postman.setNextRequest(\"passenger\") ;"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{endpoint}}/{{version}}/dc/products/air?execution={{EXECUTION_ID}}&jipcc=H2DC&selectFlights={{basket1}}&selectFlights={{basket2}}",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"{{version}}",
+								"dc",
+								"products",
+								"air"
+							],
+							"query": [
+								{
+									"key": "execution",
+									"value": "{{EXECUTION_ID}}"
+								},
+								{
+									"key": "jipcc",
+									"value": "H2DC"
+								},
+								{
+									"key": "selectFlights",
+									"value": "{{basket1}}"
+								},
+								{
+									"key": "selectFlights",
+									"value": "{{basket2}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "passenger",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Trabajar desde aqui la lógica de adición de ancillaries y asientos, según corresponda\r",
+									"const conAsientos = pm.variables.get(\"conAsientos\");\r",
+									"if (conAsientos){\r",
+									"    pm.execution.setNextRequest(\"Get Seats (Optional)\");\r",
+									"}else{\r",
+									"    postman.setNextRequest(\"Get Total\");\r",
+									"}\r",
+									"\r",
+									"\r",
+									"\r",
+									"let responseData=pm.response.json()\r",
+									"\r",
+									"let TotalPax = pm.collectionVariables.get(\"TotalPax\");\r",
+									"\r",
+									"for(let i = 0; i < TotalPax; i++ ){\r",
+									"    console.log(responseData.passengers.passengers[i].passengerDetails.lastName);\r",
+									"\r",
+									"    pm.test(\"LastName \" + (i+1) + \": \" + responseData.passengers.passengers[i].passengerDetails.lastName, function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"}\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n \"passengers\": {{passengers}},\n  \"businessLoyalty\": {\n    \"memberId\": null,\n    \"programId\": null,\n    \"airline\": null\n  },\n  \"contact\": {\n    \"emails\": [\n      \"user_tekton14@skyairline.com\"\n    ],\n    \"phones\": [\n      {\n        \"type\": \"HOME\",\n        \"countryCode\": \"\",\n        \"areaCode\": \"56\",\n        \"number\": \"987788079\",\n        \"extension\": \"\"\n      }\n    ],\n    \"addresses\": [\n      {\n        \"street1\": \"eLACbm 0\",\n        \"street2\": \"XSGmET 29\",\n        \"postcode\": \"94441\",\n        \"state\": \"NJ\",\n        \"city\": \"MCrxHNgoamtt\",\n        \"country\": \"\",\n        \"addressType\": \"BUSINESS\"\n      }\n    ]\n  }\n}"
+						},
+						"url": {
+							"raw": "{{endpoint}}/{{version}}/dc/passengers?execution={{EXECUTION_ID}}&jipcc=H2DC",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"{{version}}",
+								"dc",
+								"passengers"
+							],
+							"query": [
+								{
+									"key": "execution",
+									"value": "{{EXECUTION_ID}}"
+								},
+								{
+									"key": "jipcc",
+									"value": "H2DC"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Products (Optional)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{endpoint}}/{{version}}/dc/products?jipcc=H2DC&execution={{EXECUTION_ID}}",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"{{version}}",
+								"dc",
+								"products"
+							],
+							"query": [
+								{
+									"key": "jipcc",
+									"value": "H2DC"
+								},
+								{
+									"key": "execution",
+									"value": "{{EXECUTION_ID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Ancillaries (Optional) (Stateless)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "incap_ses_1269_2768615=xmopXf9z6WqJay+0jGWcEXZasGQAAAAAkWFk2xZR88NdkV1Xe9M+ng==; nlbi_2768615=IMHuMkn4KRdqivyRpGXCAQAAAACA6peMh5xZs9xq/TRUhgj1; visid_incap_2768615=If95WTkNRUOzNFQJvzS8tJv+nmQAAAAAQUIPAAAAAABMM/RDWjB+rE49GrOkHSz0; AWSALBTG=5GpVXAVbg4twniwxyxGf5yfzxRh1k2jLpbN6fREoY6PNgnrFI0w4bpI1V/1zSfrAqZWQUVqKRVjtZYHg37xdFj/bZBEtomsy86oGFl2UXTMbrbqFEEPACto+DHPRQKABts13v+vEdd5vrsqC33HRvoiG7HxAmQHt0NitIEjujuSrhBHjzIU=; AWSALBTGCORS=5GpVXAVbg4twniwxyxGf5yfzxRh1k2jLpbN6fREoY6PNgnrFI0w4bpI1V/1zSfrAqZWQUVqKRVjtZYHg37xdFj/bZBEtomsy86oGFl2UXTMbrbqFEEPACto+DHPRQKABts13v+vEdd5vrsqC33HRvoiG7HxAmQHt0NitIEjujuSrhBHjzIU=",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"request\": {\n        \"context\": {\n            \"pointOfSale\": \"{{oac}}\",\n            \"currency\": \"USD\"\n        },\n        \"itinerary\": {\n            \"itineraryParts\": [\n                {\n                    \"segments\": [\n                        {\n                            \"@id\": \"1\",\n                            \"cabinClass\": \"Economy\",\n                            \"flight\": {\n                                \"flightNumber\": 454,\n                                \"operatingFlightNumber\": 454,\n                                \"airlineCode\": \"H2\",\n                                \"operatingAirlineCode\": \"H2\"\n                            },\n                            \"origin\": \"SCL\",\n                            \"destination\": \"ANF\",\n                            \"departure\": \"2023-10-15T11:31:00\",\n                            \"arrival\": \"2023-10-15T14:33:00\",\n                            \"bookingClass\": \"N\",\n                            \"fareBasis\": \"NFULL\",\n                            \"@type\": \"Segment\"\n                        }\n                    ],\n                    \"@type\": \"ItineraryPart\"\n                }\n            ],\n            \"@type\": \"Itinerary\"\n        },\n        \"passengers\": [\n            {\n                \"firstName\": \"Maria\",\n                \"lastName\": \"Ramonet\",\n                \"@type\": \"PassengerDetails\",\n                \"type\": \"ADT\"\n            }\n        ]\n    }\n}"
+						},
+						"url": {
+							"raw": "{{endpoint}}/{{version}}/dc/ancillaries/shop?jipcc=H2DC",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"{{version}}",
+								"dc",
+								"ancillaries",
+								"shop"
+							],
+							"query": [
+								{
+									"key": "jipcc",
+									"value": "H2DC"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Ancillaries (Optional)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"postman.setNextRequest(\"Add Ancillaries (Optional)\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{endpoint}}/{{version}}/dc/products/ancillaries?jipcc=H2DC&execution={{EXECUTION_ID}}",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"{{version}}",
+								"dc",
+								"products",
+								"ancillaries"
+							],
+							"query": [
+								{
+									"key": "jipcc",
+									"value": "H2DC"
+								},
+								{
+									"key": "execution",
+									"value": "{{EXECUTION_ID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Ancillaries (Optional)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ancillaryOperations\": [\r\n        {\r\n            \"ancillaryCode\": \"07X\",\r\n            \"selectedTravelPart\": {\r\n                \"@id\": \"1\",\r\n                \"origin\": \"SCL\",\r\n                \"destination\": \"CJC\",\r\n                \"departure\": \"2025-05-10T13:45:00\",\r\n                \"type\": \"ITINERARY_PART\"\r\n            },\r\n            \"selectedPassengers\": [\r\n                {\r\n                    \"index\": 1,\r\n                    \"quantity\": 5\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{endpoint}}/{{version}}/dc/products/ancillaries?jipcc=H2DC&execution={{EXECUTION_ID}}",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"{{version}}",
+								"dc",
+								"products",
+								"ancillaries"
+							],
+							"query": [
+								{
+									"key": "jipcc",
+									"value": "H2DC"
+								},
+								{
+									"key": "execution",
+									"value": "{{EXECUTION_ID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Seats (Optional) (Stateless)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"\r",
+									"postman.setEnvironmentVariable(\"Seat1A\", jsonData.response.seatsItineraryParts[0].segmentSeatMaps[0].passengerSeatMaps[0].seatMap.cabins[0].seatRows[1].seats[0].code);\r",
+									"postman.setEnvironmentVariable(\"Price1A\", jsonData.response.seatsItineraryParts[0].segmentSeatMaps[0].passengerSeatMaps[0].seatMap.cabins[0].seatRows[1].seats[0].seatPrice.originalTotalPrice.alternatives[0][0].amount);\r",
+									"\r",
+									"\r",
+									"console.log(\"SeatRows\")\r",
+									"var seatMap = jsonData.response.seatsItineraryParts[0].segmentSeatMaps[0].passengerSeatMaps[0].seatMap.cabins[0].seatRows\r",
+									"seatMap = seatMap.splice(1,seatMap.length-1)\r",
+									"\r",
+									"console.log(seatMap)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "visid_incap_2768615=If95WTkNRUOzNFQJvzS8tJv+nmQAAAAAQUIPAAAAAABMM/RDWjB+rE49GrOkHSz0; AWSALBTG=P+TGJYigCyGF/YdsbtO9iGtp95X+wr3RZuduLB3XdP5OuOqDoj+XR3LdH2x3hEc5MHe8HpHQy5dKzRWDGMh9ZfyJgjq9N1WzDJ0GbfIHIFfWha2W01qqzyqJZJqef5BVixyEuuLHtW2+qiM41jXNuo216I67bRi1kBySr7+bww07UVIiQ0o=; AWSALBTGCORS=P+TGJYigCyGF/YdsbtO9iGtp95X+wr3RZuduLB3XdP5OuOqDoj+XR3LdH2x3hEc5MHe8HpHQy5dKzRWDGMh9ZfyJgjq9N1WzDJ0GbfIHIFfWha2W01qqzyqJZJqef5BVixyEuuLHtW2+qiM41jXNuo216I67bRi1kBySr7+bww07UVIiQ0o="
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"request\": {\n        \"context\": {\n            \"pointOfSale\": \"{{oac}}\",\n            \"currency\": \"{{currency}}\"\n        },\n        \"itinerary\": {\n            \"itineraryParts\": [\n                {\n                    \"segments\": [\n                        {\n                            \"@id\": \"1\",\n                            \"cabinClass\": \"Economy\",\n                            \"flight\": {\n                                \"flightNumber\": \"{{FlightNumber1}}\",\n                                \"operatingFlightNumber\": \"{{operatingFlightNumber1}}\",\n                                \"airlineCode\": \"{{airlineCode1}}\",\n                                \"operatingAirlineCode\": \"{{operatingAirlineCode1}}\"\n                            },\n                            \"origin\": \"{{Origin}}\",\n                            \"destination\": \"{{Destination}}\",\n                            \"departure\": \"{{DepartureFlightSchedule}}\",\n                            \"arrival\": \"{{ArrivalFlightSchedule}}\",\n                            \"bookingClass\": \"{{bookingClass}}\",\n                            \"fareBasis\": \"{{fareBasis}}\",\n                            \"@type\": \"Segment\"\n                        }\n                    ],\n                    \"@type\": \"ItineraryPart\"\n                }\n            ],\n            \"@type\": \"Itinerary\"\n        },\n        \"passengers\": [\n            {\n                \"firstName\": \"{{FirstName1}}\",\n                \"lastName\": \"{{LastName1}}\",\n                \"@type\": \"PassengerDetails\",\n                \"type\": \"{{Type1}}\"\n            }\n        ],\n        \"seatMapSearchCriteria\": {\n            \"includePriceRanges\": true,\n            \"includePricingOptions\": true\n        }\n    }\n}"
+						},
+						"url": {
+							"raw": "{{endpoint}}/{{version}}/dc/seats/shop?jipcc=H2DC",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"{{version}}",
+								"dc",
+								"seats",
+								"shop"
+							],
+							"query": [
+								{
+									"key": "jipcc",
+									"value": "H2DC"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Seats (Optional)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"let segmentSeatMaps = jsonData.seatsItineraryParts;\r",
+									"\r",
+									"\r",
+									"const seatf = [];\r",
+									"\r",
+									"console.log(Object.keys(segmentSeatMaps).length);\r",
+									"\r",
+									"\r",
+									"\r",
+									"for(let i = 0;i < Object.keys(segmentSeatMaps).length;i++){\r",
+									"const arr = jsonData.seatsItineraryParts[i].segmentSeatMaps[0].passengerSeatMaps[0].seatMap.cabins[0].seatRows;\r",
+									"\r",
+									"const seatsCode = [];\r",
+									"arr.forEach(item =>{\r",
+									"    item.seats.forEach(seat =>{\r",
+									"        if(seat.available){\r",
+									"            seatsCode.push(seat.code);}\r",
+									"    })\r",
+									"})\r",
+									"\r",
+									"seatf[i]= seatsCode;\r",
+									"\r",
+									"}\r",
+									"console.log(seatf);\r",
+									"\r",
+									"/*const arr = jsonData.seatsItineraryParts[0].segmentSeatMaps[0].passengerSeatMaps[0].seatMap.cabins[0].seatRows;\r",
+									"\r",
+									"const seatsCode = [];\r",
+									"\r",
+									"arr.forEach(item =>{\r",
+									"    item.seats.forEach(seat =>{\r",
+									"        if(seat.available){\r",
+									"            seatsCode.push(seat.code);}\r",
+									"    })\r",
+									"})\r",
+									"*/\r",
+									"pm.environment.set(\"seatsCode\", seatf);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{endpoint}}/{{version}}/dc/products/seats?jipcc=H2DC&execution={{EXECUTION_ID}}",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"{{version}}",
+								"dc",
+								"products",
+								"seats"
+							],
+							"query": [
+								{
+									"key": "jipcc",
+									"value": "H2DC"
+								},
+								{
+									"key": "execution",
+									"value": "{{EXECUTION_ID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Seats (Optional)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const asientos = [];     \r",
+									"\r",
+									"const seatCode = pm.environment.get(\"seatsCode\");\r",
+									"console.log(seatCode);\r",
+									"let TotalPax = pm.collectionVariables.get(\"TotalPax\");\r",
+									"const a = pm.collectionVariables.get(\"TripType\");\r",
+									"\r",
+									"let PaxINF = pm.collectionVariables.get(\"PaxINF\");\r",
+									" \r",
+									"if(PaxINF > 0){\r",
+									"    TotalPax = TotalPax - PaxINF;\r",
+									"}\r",
+									"\r",
+									"for(let i = 0;i < TotalPax; i++){\r",
+									"const asiento={\r",
+									"            \"seatCode\": seatCode[0][i],\r",
+									"            \"selectedSegment\": {\r",
+									"                \"origin\": pm.collectionVariables.get(\"Origin\"),\r",
+									"                \"destination\": pm.collectionVariables.get(\"Destination\"),\r",
+									"                \"departure\": pm.collectionVariables.get(\"DepartureFlightSchedule\")\r",
+									"            },\r",
+									"            \"passengerIndex\": i + 1\r",
+									"           \r",
+									"\r",
+									"}\r",
+									"\r",
+									"asientos.push(asiento);\r",
+									"}\r",
+									"\r",
+									"console.log(pm.collectionVariables.get(\"TripType\"));\r",
+									"if(pm.collectionVariables.get(\"TripType\") ===\"RT\"){\r",
+									"for(let i = 0;i < TotalPax; i++){\r",
+									"const asiento={\r",
+									"            \"seatCode\": seatCode[1][i+40],\r",
+									"            \"selectedSegment\": {\r",
+									"                \"origin\": pm.collectionVariables.get(\"Destination\"),\r",
+									"                \"destination\": pm.collectionVariables.get(\"Origin\"),\r",
+									"                \"departure\": pm.collectionVariables.get(\"ReturnFlightSchedule\")\r",
+									"            },\r",
+									"            \"passengerIndex\": i + 1\r",
+									"           \r",
+									"\r",
+									"}\r",
+									"\r",
+									"asientos.push(asiento);\r",
+									"}\r",
+									"}\r",
+									"\r",
+									"\r",
+									"pm.environment.set(\"asientos\", JSON.stringify(asientos));\r",
+									"console.log(pm.environment.get(\"asientos\"));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.response.to.have.status(200);\r",
+									"postman.setNextRequest(\"Get Total\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"seatOperations\": \r\n{{asientos}}\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{endpoint}}/{{version}}/dc/products/seats?jipcc=H2DC&execution={{EXECUTION_ID}}",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"{{version}}",
+								"dc",
+								"products",
+								"seats"
+							],
+							"query": [
+								{
+									"key": "jipcc",
+									"value": "H2DC"
+								},
+								{
+									"key": "execution",
+									"value": "{{EXECUTION_ID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Total",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = JSON.parse(responseBody)\r",
+									"postman.setEnvironmentVariable(\"amountTotal\",jsonResponse.total.alternatives[0][0].amount)\r",
+									"postman.setEnvironmentVariable(\"currency\",jsonResponse.total.alternatives[0][0].currency)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "// {}"
+						},
+						"url": {
+							"raw": "{{endpoint}}/{{version}}/dc/products?jipcc=H2DC&execution={{EXECUTION_ID}}",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"{{version}}",
+								"dc",
+								"products"
+							],
+							"query": [
+								{
+									"key": "jipcc",
+									"value": "H2DC"
+								},
+								{
+									"key": "execution",
+									"value": "{{EXECUTION_ID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Purchase",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.environment.set(\"reloc\", jsonData.pnr.reloc);\r",
+									"pm.environment.set(\"lastName\", jsonData.pnr.passengers[0].passengerDetails.lastName);\r",
+									"\r",
+									"    pm.test(\"PNR: \" + jsonData.pnr.reloc), function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    }"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"paymentRequired\": true,\n  \"payment\": [\n    {\n      \"@type\": \"CREDIT_CARD\",\n      \"@id\": \"1\",\n      \"amount\": {\n        \"amount\": \"{{amountTotal}}\",\n        \"currency\": \"{{currency}}\"\n      },\n      \"number\": \"4111111111111111\",\n      \"cvc\": \"737\",\n      \"pin\": null,\n      \"holderName\": \"McDonnell Kumar\",\n      \"holderNameInDetail\": null,\n      \"expirationDate\": \"2030-03\",\n      \"cardCode\": \"YA\",\n      \"installment\": null,\n      \"mobileNumber\": null,\n      \"redirectData\": null,\n      \"received3rdPartyData\": null,\n      \"selectedDCCOffer\": null\n    }\n  ],\n  \"billingData\": {\n    \"street1\": \"123 Dallas St\",\n    \"street2\": \"Apt 123\",\n    \"city\": \"Santiago\",\n    \"province\": \"Santiago\",\n    \"zipCode\": \"12345\",\n    \"country\": \"CL\",\n    \"phone\": null,\n    \"email\": \"user_tekton14@skyairline.com\"\n  },\n  \"languageForBooking\": null,\n  \"fraudNetData\": null,\n  \"remarksAndSSRs\": null,\n  \"profileInput\": null,\n  \"queuePlacementData\": null\n}"
+						},
+						"url": {
+							"raw": "{{endpoint}}/{{version}}/dc/purchase?jipcc=H2DC&execution={{EXECUTION_ID}}",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"{{version}}",
+								"dc",
+								"purchase"
+							],
+							"query": [
+								{
+									"key": "jipcc",
+									"value": "H2DC"
+								},
+								{
+									"key": "execution",
+									"value": "{{EXECUTION_ID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "reloc",
+			"value": "NHHOEF"
+		},
+		{
+			"key": "offer1_hash",
+			"value": ""
+		},
+		{
+			"key": "Origin",
+			"value": ""
+		},
+		{
+			"key": "Destination",
+			"value": ""
+		},
+		{
+			"key": "Departure",
+			"value": ""
+		},
+		{
+			"key": "PaxADT",
+			"value": ""
+		},
+		{
+			"key": "PaxCHD",
+			"value": ""
+		},
+		{
+			"key": "PaxINF",
+			"value": ""
+		},
+		{
+			"key": "PaxUNN",
+			"value": ""
+		},
+		{
+			"key": "DepartureOriginDate",
+			"value": ""
+		},
+		{
+			"key": "DepartureReturnDate",
+			"value": ""
+		},
+		{
+			"key": "FirstName",
+			"value": ""
+		},
+		{
+			"key": "LastName",
+			"value": ""
+		},
+		{
+			"key": "OriginBundle",
+			"value": ""
+		},
+		{
+			"key": "ReturnBundle",
+			"value": ""
+		},
+		{
+			"key": "PNR",
+			"value": ""
+		},
+		{
+			"key": "DepartureFlightSchedule",
+			"value": ""
+		},
+		{
+			"key": "ReturnFlightSchedule",
+			"value": ""
+		},
+		{
+			"key": "TripType",
+			"value": ""
+		},
+		{
+			"key": "TotalPax",
+			"value": ""
+		},
+		{
+			"key": "FirstName1",
+			"value": ""
+		},
+		{
+			"key": "LastName1",
+			"value": ""
+		},
+		{
+			"key": "Type1",
+			"value": ""
+		},
+		{
+			"key": "FirstName2",
+			"value": ""
+		},
+		{
+			"key": "LastName2",
+			"value": ""
+		},
+		{
+			"key": "Type2",
+			"value": ""
+		},
+		{
+			"key": "FirstName3",
+			"value": ""
+		},
+		{
+			"key": "LastName3",
+			"value": ""
+		},
+		{
+			"key": "Type3",
+			"value": ""
+		},
+		{
+			"key": "FirstName4",
+			"value": ""
+		},
+		{
+			"key": "LastName4",
+			"value": ""
+		},
+		{
+			"key": "Type4",
+			"value": ""
+		},
+		{
+			"key": "FirstName5",
+			"value": ""
+		},
+		{
+			"key": "LastName5",
+			"value": ""
+		},
+		{
+			"key": "Type5",
+			"value": ""
+		},
+		{
+			"key": "FirstName6",
+			"value": ""
+		},
+		{
+			"key": "LastName6",
+			"value": ""
+		},
+		{
+			"key": "Type6",
+			"value": ""
+		},
+		{
+			"key": "FirstName7",
+			"value": ""
+		},
+		{
+			"key": "LastName7",
+			"value": ""
+		},
+		{
+			"key": "Type7",
+			"value": ""
+		},
+		{
+			"key": "FirstName8",
+			"value": ""
+		},
+		{
+			"key": "LastName8",
+			"value": ""
+		},
+		{
+			"key": "Type8",
+			"value": ""
+		},
+		{
+			"key": "FirstName9",
+			"value": ""
+		},
+		{
+			"key": "LastName9",
+			"value": ""
+		},
+		{
+			"key": "Type9",
+			"value": ""
+		},
+		{
+			"key": "Birthday1",
+			"value": ""
+		},
+		{
+			"key": "Birthday2",
+			"value": ""
+		},
+		{
+			"key": "Birthday3",
+			"value": ""
+		},
+		{
+			"key": "Birthday4",
+			"value": ""
+		},
+		{
+			"key": "Birthday5",
+			"value": ""
+		},
+		{
+			"key": "Birthday6",
+			"value": ""
+		},
+		{
+			"key": "Birthday7",
+			"value": ""
+		},
+		{
+			"key": "Birthday8",
+			"value": ""
+		},
+		{
+			"key": "Birthday9",
+			"value": ""
+		},
+		{
+			"key": "Gender1",
+			"value": ""
+		},
+		{
+			"key": "Treatment1",
+			"value": ""
+		},
+		{
+			"key": "Gender2",
+			"value": ""
+		},
+		{
+			"key": "Treatment2",
+			"value": ""
+		},
+		{
+			"key": "Gender3",
+			"value": ""
+		},
+		{
+			"key": "Treatment3",
+			"value": ""
+		},
+		{
+			"key": "Gender4",
+			"value": ""
+		},
+		{
+			"key": "Treatment4",
+			"value": ""
+		},
+		{
+			"key": "Gender5",
+			"value": ""
+		},
+		{
+			"key": "Treatment5",
+			"value": ""
+		},
+		{
+			"key": "ArrivalFlightSchedule",
+			"value": ""
+		},
+		{
+			"key": "FlightNumber1",
+			"value": ""
+		},
+		{
+			"key": "operatingFlightNumber1",
+			"value": ""
+		},
+		{
+			"key": "airlineCode1",
+			"value": ""
+		},
+		{
+			"key": "operatingAirlineCode1",
+			"value": ""
+		},
+		{
+			"key": "bookingClass",
+			"value": ""
+		},
+		{
+			"key": "fareBasis",
+			"value": ""
+		},
+		{
+			"key": "oac",
+			"value": ""
+		},
+		{
+			"key": "Gender6",
+			"value": ""
+		},
+		{
+			"key": "Gender7",
+			"value": ""
+		},
+		{
+			"key": "conAsientos",
+			"value": ""
+		},
+		{
+			"key": "equipajeCabina",
+			"value": ""
+		},
+		{
+			"key": "equipajeBodega",
+			"value": ""
+		},
+		{
+			"key": "equipajeEspecial",
+			"value": ""
+		}
+	]
+}

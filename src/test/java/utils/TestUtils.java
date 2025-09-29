@@ -18,7 +18,8 @@ import java.util.Date;
 public class TestUtils {
 
     private static final String TIMESTAMP = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-    private static final String FOLDER_PATH = "src/test/resources/Evidencias/" + TIMESTAMP + "/";
+    private static final String FOLDER_PATH = "target/evidencias/" + TIMESTAMP + "/";
+
 
     public static void takeScreenshot(WebDriver driver, String fileName) {
         File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);

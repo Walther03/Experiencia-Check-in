@@ -1,6 +1,6 @@
-package com.Kiosk.pageObjects.pages;
+package com.checkIn.pageObjects.pages;
 
-import com.Kiosk.pageObjects.elements.HomePageElements;
+import com.checkIn.pageObjects.elements.HomePageElements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -19,7 +19,6 @@ public class HomePage {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
-    // Método auxiliar para obtener un elemento con espera
     private WebElement getElement(By locator) {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }

@@ -1,4 +1,4 @@
-package com.Kiosk.pageObjects.elements;
+package com.checkIn.pageObjects.elements;
 
 import org.openqa.selenium.By;
 

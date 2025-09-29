@@ -1,5 +1,6 @@
 package com.checkIn.pageObjects.pages;
 
+import com.checkIn.pageObjects.elements.DashboardPageElements;
 import com.checkIn.pageObjects.elements.HomePageElements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -10,13 +11,13 @@ import utils.TestUtils;
 
 import java.time.Duration;
 
-public class HomePage {
+public class DashboardPage {
     private WebDriver driver;
     private WebDriverWait wait;
 
-    public HomePage(WebDriver driver) {
+    public DashboardPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(60));
     }
 
     // Método auxiliar para obtener un elemento con espera
@@ -24,25 +25,12 @@ public class HomePage {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
-    // Acciones específicas de la página
-    public void enterPnr(String pnr) {
-        getElement(HomePageElements.pnrField).sendKeys(pnr);
+
+    public String getTitulo() {
+        WebElement titleElement = getElement(DashboardPageElements.dasboardTitle);
+        TestUtils.takeScreenshot(driver, "resultado_busqueda.png");
+        return titleElement.getText();
     }
 
-    public void enterLastName(String lastName) {
-        getElement(HomePageElements.lastNameField).sendKeys(lastName);
-    }
 
-    public void clickSearch() {
-        getElement(HomePageElements.searchButton).click();
-    }
-
-    // Método para flujo completo
-    public void busquedaReserva(String pnr, String apellido) {
-        enterPnr(pnr);
-        enterLastName(apellido);
-        TestUtils.takeScreenshot(driver, "antes_de_buscar.png");
-
-        clickSearch();
-    }
 }

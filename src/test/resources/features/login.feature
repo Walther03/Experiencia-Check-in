@@ -1,6 +1,8 @@
-Feature: Login functionality
+Feature: Búsqueda de reservas
+  Scenario: Buscar reserva con datos válidos
+    Given Ingreso a la pagina de Check-in
+    And ejecuto la colección de Postman y obtengo la reserva
+    And busco la reserva por su codigo  y apellido creado
+    Then debo ver el titulo del dashboard
+    And se cierra el navegador
 
-  Scenario: Successful login with valid credentials
-    Given I am on the login page
-    When I enter username "test3@yopmail.com" and password "Sky.2023"
-    Then I should be logged in successfully

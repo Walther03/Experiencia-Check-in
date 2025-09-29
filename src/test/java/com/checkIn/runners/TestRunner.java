@@ -9,9 +9,10 @@ import io.cucumber.testng.CucumberOptions;
         glue = {"com/checkIn/stepdefinitions"},
         plugin = {
                 "pretty",
-                "html:target/cucumber-reports/html-report",
-                "json:target/cucumber-reports/Cucumber.json"
+                "html:target/cucumber-reports",
+                "json:target/cucumber.json"
         }
+
 )
 
 public class TestRunner extends AbstractTestNGCucumberTests {

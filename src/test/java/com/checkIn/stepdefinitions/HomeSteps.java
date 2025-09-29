@@ -46,14 +46,19 @@ public class HomeSteps {
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
     }
-    // Captura de screenshot en cada paso
+    
     @AfterStep
     public void takeScreenshotAfterStep(Scenario scenario) {
         if (driver != null) {
-            byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
-            scenario.attach(screenshot, "image/png", "Paso: " + scenario.getName());
+            try {
+                byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+                scenario.attach(screenshot, "image/png", "Paso: " + scenario.getName());
+            } catch (org.openqa.selenium.NoSuchSessionException e) {
+                System.out.println("INFO: El driver ya fue cerrado, no se puede capturar screenshot en este paso.");
+            }
         }
     }
+
 
     // Cierra navegador y guarda evidencia si falla
     @After
@@ -121,12 +126,6 @@ public class HomeSteps {
     }
 
 
-    @After
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
-    }
 
 
 
